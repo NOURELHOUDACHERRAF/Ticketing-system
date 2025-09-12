@@ -4,7 +4,7 @@ USE ticketing;
 CREATE TABLE unite_org(
     Num INT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
-    Abreviation VARCHAR(50) NOT NULL, -- Réduit de 255 à 50
+    Abreviation VARCHAR(50) NOT NULL, 
     INDEX idx_Num (Num)
 );
 
@@ -110,7 +110,7 @@ CREATE TABLE ticket (
     
     FOREIGN KEY (client_id) REFERENCES utilisateur(id_utilisateur) ON DELETE SET NULL,
     FOREIGN KEY (agent_id) REFERENCES Agent(id_agent) ON DELETE SET NULL,
-    FOREIGN KEY (superviseur_id) REFERENCES superviseur(id_superviseur) ON DELETE SET NULL, -- Corrigé
+    FOREIGN KEY (superviseur_id) REFERENCES superviseur(id_superviseur) ON DELETE SET NULL, 
     FOREIGN KEY (categorie_id) REFERENCES categorie(id_cat) ON DELETE SET NULL,
     
   
@@ -161,7 +161,6 @@ CREATE TABLE historique (
     nouvelle_valeur TEXT,
     date_action TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     commentaire TEXT,
-    adresse_ip VARCHAR(45),
     type_action ENUM('CREATION', 'MODIFICATION', 'TRANSFERT', 'ASSIGNATION', 'RESOLUTION', 'FERMETURE', 'COMMENTAIRE') DEFAULT 'MODIFICATION',
     
     FOREIGN KEY (ticket_id) REFERENCES ticket(id_ticket) ON DELETE CASCADE,
