@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,18 +15,22 @@ return new class extends Migration
             $table->string('password', 255);
             $table->string('email', 150)->unique()->nullable();
             $table->string('telephone', 20)->nullable();
-            $table->timestamp('date_activation')->useCurrent();
-            $table->timestamp('date_expiration')->nullable();
+            $table->unsignedBigInteger('cree_par')->nullable();
             $table->boolean('actif')->default(true);
-            $table->integer('Unit_org')->nullable();
-            $table->unsignedBigInteger('cree_par');
+            $table->timestamp('date_activation')->nullable();
+            $table->timestamp('date_expiration')->nullable();
+            $table->rememberToken();
             $table->timestamps();
+            
+            // Foreign key constraints
+            $table->unsignedBigInteger('Unit_org');
+            
+                   $table->foreign('Unit_org')
+                  ->references('id_unite_org')
+                  ->on('unite_org')
+                  ->onDelete('cascade');
 
-            $table->foreign('cree_par')->references('id_admin')->on('admin')->cascadeOnDelete();
-
-            $table->index('login', 'idx_login');
-            $table->index('email', 'idx_email');
-            $table->index('actif', 'idx_actif');
+            $table->foreign('cree_par')->references('id_admin')->on('admin')->onDelete('set null');
         });
     }
 

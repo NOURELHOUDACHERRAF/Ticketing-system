@@ -10,17 +10,18 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureAdmin
 {
     public function handle(Request $request, Closure $next): Response
-    {
-        $user = $request->user();
-        if (!$user) {
-            return redirect()->route('login');
-        }
+{
+    $user = auth('admin')->user(); // 🔑 guard admin
 
-        $isAdmin = Admin::where('email', $user->email)->exists();
-        if (!$isAdmin) {
-            abort(403);
-        }
-
-        return $next($request);
+    if (!$user) {
+        return redirect()->route('login');
     }
+
+    if (!($user instanceof Admin)) {
+        abort(403, 'Accès refusé. Administrateur requis.');
+    }
+
+    return $next($request);
+}
+
 }

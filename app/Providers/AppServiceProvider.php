@@ -2,24 +2,29 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
+use Inertia\Inertia;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function register()
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
+    public function boot()
     {
-        Vite::prefetch(concurrency: 3);
+        // Share the authenticated user for both guards
+       Inertia::share([
+    'auth' => function () {
+        if ($admin = auth('admin')->user()) {
+            return ['user' => $admin, 'guard' => 'admin'];
+        } elseif ($utilisateur = auth('utilisateur')->user()) {
+            return ['user' => $utilisateur, 'guard' => 'utilisateur'];
+        }
+        return ['user' => null];
+    },
+]);
+
     }
 }

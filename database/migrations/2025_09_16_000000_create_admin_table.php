@@ -15,8 +15,10 @@ return new class extends Migration
             $table->string('login', 50)->unique();
             $table->string('password', 255);
             $table->string('email', 150)->unique()->nullable();
+            $table->unsignedBigInteger('Unit_org')->nullable();
             $table->string('telephone', 20)->nullable();
             $table->timestamps();
+            $table->rememberToken(); 
         });
     }
 

@@ -28,6 +28,7 @@ class Ticket extends Model
         'date_resolution' => 'datetime',
     ];
 
+    // RELATIONSHIPS
     public function utilisateur()
     {
         return $this->belongsTo(Utilisateur::class, 'utilisateur_id', 'id_utilisateur');
