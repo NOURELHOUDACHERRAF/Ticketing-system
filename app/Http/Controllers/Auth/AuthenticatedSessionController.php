@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Agent;
 use App\Models\Utilisateur;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,6 +41,14 @@ class AuthenticatedSessionController extends Controller
             Auth::guard('admin')->login($admin, $remember);
             $request->session()->regenerate();
             return redirect(route('admin.home'));
+        }
+
+        // Try to find agent
+        $agent = Agent::where('email', $email)->first();
+        if ($agent && Hash::check($password, $agent->password)) {
+            Auth::guard('agent')->login($agent, $remember);
+            $request->session()->regenerate();
+            return redirect(route('agent.dashboard'));
         }
 
         // Try to find utilisateur

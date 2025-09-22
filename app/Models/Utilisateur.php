@@ -51,7 +51,7 @@ class Utilisateur extends Authenticatable
     }
 
     public function uniteOrganisationnelle()
-{
-    return $this->belongsTo(UniteOrg::class, 'Unit_org', 'id_unite_org');
-}
+    {
+        return $this->belongsTo(UniteOrg::class, 'Unit_org', 'Num');
+    }
 }

@@ -3,21 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Agent extends Model
+class Agent extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $table = 'agent';
     protected $primaryKey = 'id_agent';
 
     protected $fillable = [
         'login', 'password', 'nom', 'prenom', 'email', 'telephone', 'groupe',
-        'date_activation', 'date_expiration', 'cree_par', 'est_superviseur'
+        'date_activation', 'date_expiration', 'cree_par', 'est_superviseur', 'remember_token'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
         'est_superviseur' => 'boolean',

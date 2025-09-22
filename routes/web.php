@@ -21,6 +21,8 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     if ($admin = auth('admin')->user()) {
         return redirect()->route('admin.home');
+    } elseif ($agent = auth('agent')->user()) {
+        return redirect()->route('agent.dashboard');
     } elseif ($user = auth('utilisateur')->user()) {
         return redirect()->route('utilisateur.dashboard');
     }
@@ -49,6 +51,33 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::post('groups/{group}/set-supervisor', [GroupController::class, 'setSupervisor'])->name('groups.setSupervisor');
     Route::post('users/{user}/assign-unit', [AdminUserController::class, 'assignUnit'])->name('users.assignUnit');
 });
+
+
+
+// ----------- Agent routes -----------
+Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function () {
+    Route::get('/dashboard', function () {
+        $agent = auth('agent')->user();
+        return Inertia::render('Agent/Dashboard', [
+            'auth' => ['user' => $agent],
+        ]);
+    })->name('dashboard');
+
+    Route::get('/tickets', [\App\Http\Controllers\Agent\TicketController::class, 'index'])
+        ->name('tickets.index');
+    Route::post('/tickets/{ticket}/assign', [\App\Http\Controllers\Agent\TicketController::class, 'assign'])
+        ->name('tickets.assign');
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Agent\TicketController::class, 'show'])
+        ->name('tickets.show');
+    Route::post('/tickets/{ticket}/message', [\App\Http\Controllers\Agent\TicketController::class, 'sendMessage'])
+        ->name('tickets.message');
+    Route::post('/tickets/{ticket}/request-help', [\App\Http\Controllers\Agent\TicketController::class, 'requestHelp'])
+        ->name('tickets.requestHelp');
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+});
+
 
 // ----------- Utilisateur routes -----------
 Route::prefix('utilisateur')->name('utilisateur.')->middleware('auth:utilisateur')->group(function () {
