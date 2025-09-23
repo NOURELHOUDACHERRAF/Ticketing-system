@@ -11,8 +11,12 @@ use App\Http\Controllers\Admin\UtilisateurController as AdminUserController;
 use App\Http\Controllers\Utilisateur\DashboardController as UtilisateurDashboardController;
 use App\Http\Controllers\Utilisateur\TicketController as UtilisateurTicketController;
 use App\Http\Controllers\Utilisateur\NotificationController;
+use App\Http\Controllers\Agent\NotificationController as AgentNotificationController;
 use App\Http\Controllers\Utilisateur\HistoriqueController;
+use App\Http\Controllers\Agent\HistoriqueController as AgentHistoriqueController;
 use App\Http\Controllers\Utilisateur\MessageController;
+use App\Http\Controllers\Agent\LogoutController as AgentLogoutController;
+
 
 Route::get('/', function () {
     return response()->json(['message' => 'Ticketing System API']);
@@ -67,15 +71,20 @@ Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function
         ->name('tickets.index');
     Route::post('/tickets/{ticket}/assign', [\App\Http\Controllers\Agent\TicketController::class, 'assign'])
         ->name('tickets.assign');
+    Route::post('/tickets/{ticket}/resolve', [\App\Http\Controllers\Agent\TicketController::class, 'resolve'])
+    ->name('tickets.resolve');
     Route::get('/tickets/{ticket}', [\App\Http\Controllers\Agent\TicketController::class, 'show'])
         ->name('tickets.show');
     Route::post('/tickets/{ticket}/message', [\App\Http\Controllers\Agent\TicketController::class, 'sendMessage'])
         ->name('tickets.message');
     Route::post('/tickets/{ticket}/request-help', [\App\Http\Controllers\Agent\TicketController::class, 'requestHelp'])
         ->name('tickets.requestHelp');
-
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+         Route::get('/notifications', [AgentNotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/historiques', [AgentHistoriqueController::class, 'index'])
+        ->name('historiques.index');
+    Route::post('/logout', [AgentLogoutController::class, '__invoke'])->name('logout');
+   
 });
 
 

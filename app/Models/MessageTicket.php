@@ -28,14 +28,16 @@ class MessageTicket extends Model
         return $this->belongsTo(Ticket::class, 'ticket_id', 'id_ticket');
     }
 
-    public function utilisateurAuteur()
+  public function utilisateurAuteur()
 {
     return $this->belongsTo(\App\Models\Utilisateur::class, 'expediteur_id', 'id_utilisateur');
+                
 }
 
 public function agentAuteur()
 {
     return $this->belongsTo(\App\Models\Agent::class, 'expediteur_id', 'id_agent');
+              
 }
 
 }

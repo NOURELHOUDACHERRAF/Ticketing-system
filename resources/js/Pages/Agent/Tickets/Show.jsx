@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AgentLayout from '@/Layouts/AgentLayout';
 
 export default function Show({ ticket, agent }) {
     const { data, setData, post, processing } = useForm({
@@ -43,7 +43,7 @@ export default function Show({ ticket, agent }) {
     };
 
     return (
-        <AuthenticatedLayout>
+        <AgentLayout>
             <Head title={`Ticket #${ticket.numero_ticket}`} />
             <div className="p-6 max-w-4xl mx-auto">
                 <div className="mb-6">
@@ -52,6 +52,27 @@ export default function Show({ ticket, agent }) {
                     </Link>
                     <h1 className="text-2xl font-bold">Ticket #{ticket.numero_ticket}</h1>
                 </div>
+                 {/* Action Buttons */}
+
+
+{ticket.statut === 'EN_COURS' && ticket.agent_id === agent.id_agent && (
+    <div className="mt-4 pt-4 border-t">
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                post(route('agent.tickets.resolve', { ticket: ticket.id_ticket }));
+            }}
+        >
+            <button
+                type="submit"
+                disabled={processing}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+            >
+                {processing ? 'Resolving...' : 'Marquer comme résolu'}
+            </button>
+        </form>
+    </div>
+)}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Ticket Details */}
@@ -112,31 +133,57 @@ export default function Show({ ticket, agent }) {
                             )}
                         </div>
 
-                        {/* Messages */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h3 className="text-lg font-semibold mb-4">Messages</h3>
-                            
-                            {ticket.messages && ticket.messages.length > 0 ? (
-                                <div className="space-y-4">
-                                    {ticket.messages.map(message => (
-                                        <div key={message.id_message} className={`p-3 rounded-lg ${
-                                            message.type_expediteur === 'AGENT' ? 'bg-blue-50 ml-8' : 'bg-gray-50 mr-8'
-                                        }`}>
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="font-medium text-sm">
-                                                    {message.type_expediteur === 'AGENT' ? 'Agent' : 'User'}
-                                                </span>
-                                                <span className="text-xs text-gray-500">
-                                                    {new Date(message.date_envoi).toLocaleString()}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-gray-700 whitespace-pre-wrap">{message.contenu}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-gray-500 text-center py-4">No messages yet</p>
-                            )}
+{/* Messages */}
+<div className="bg-white rounded-lg shadow p-6">
+  <h3 className="text-lg font-semibold mb-4">Messages</h3>
+
+  {ticket.messages && ticket.messages.length > 0 ? (
+    ticket.messages.map((m) => {
+      const isAgent = m.type_expediteur === 'AGENT';
+
+      // Determine sender name
+      const senderName = isAgent
+        ? 'Vous'
+        : `${ticket.utilisateur?.nom || ''} ${ticket.utilisateur?.prenom || ''}`.trim() || 'Utilisateur';
+
+      return (
+        <div
+          key={m.id_message || Math.random()} // fallback key just in case
+          className={`border-l-4 pl-4 py-2 ${isAgent ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'}`}
+        >
+          <div className="flex justify-between items-start mb-1">
+            <strong className={isAgent ? 'text-green-600' : 'text-blue-600'}>
+              {senderName}
+            </strong>
+            <span className="text-xs text-gray-500">
+              {new Date(m.date_envoi || m.created_at).toLocaleString('fr-FR')}
+            </span>
+          </div>
+          <p className="text-gray-700 mb-2">{m.contenu}</p>
+
+          {m.type === "PROPOSITION_SOLUTION" && ticket.statut === 'RESOLU' && (
+            <div className="mt-3 space-x-2">
+              <button
+                onClick={acceptSolution}
+                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+              >
+                Accepter la solution
+              </button>
+              <button
+                onClick={refuseSolution}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+              >
+                Refuser la solution
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    })
+  ) : (
+    <p className="text-gray-500 italic">Aucun message pour le moment.</p>
+  )}
+</div>
 
                             {/* Send Message Form */}
                             <form onSubmit={handleSendMessage} className="mt-4">
@@ -194,7 +241,6 @@ export default function Show({ ticket, agent }) {
                         </div>
                     </div>
                 </div>
-            </div>
-        </AuthenticatedLayout>
+        </AgentLayout>
     );
 }

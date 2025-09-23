@@ -114,7 +114,7 @@ $ticket = Ticket::with([
             'commentaire' => 'Utilisateur a accepté la solution',
         ]);
 
-        $ticket->notifications()->create([
+        Notification::create([
             'destinataire_id' => $ticket->agent_id,
             'type_destinataire' => 'AGENT',
             'type' => NotificationType::TICKET_CLOS,
@@ -138,7 +138,7 @@ $ticket = Ticket::with([
             'commentaire' => 'Utilisateur a refusé la solution',
         ]);
 
-        $ticket->notifications()->create([
+       Notification::create([
             'destinataire_id' => $ticket->agent_id,
             'type_destinataire' => 'AGENT',
             'type' => NotificationType::SOLUTION_REFUSEE,

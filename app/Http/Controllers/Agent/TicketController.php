@@ -12,7 +12,10 @@ use App\Enums\NotificationType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-
+use App\Enums\ActionType; 
+use App\Models\Historique;
+use App\Enums\TicketStatus;
+use Illuminate\Support\Facades\Auth;
 class TicketController extends Controller
 {
     public function index(): Response
@@ -98,7 +101,7 @@ class TicketController extends Controller
         ]);
     }
 
-    public function assign(Request $request, Ticket $ticket)
+  public function assign(Request $request, Ticket $ticket)
     {
         $agent = auth('agent')->user();
         
@@ -178,13 +181,6 @@ class TicketController extends Controller
             ]);
         }
 
-        // Create history entry
-        $ticket->historiques()->create([
-            'agent_id' => $agent->id_agent,
-            'action' => 'Message sent',
-            'commentaire' => 'Agent sent a message',
-            'type_action' => 'ASSIGNATION',
-        ]);
 
         return back()->with('success', 'Message sent successfully.');
     }
@@ -266,4 +262,30 @@ class TicketController extends Controller
 
         return back()->with('success', 'Help requested successfully. Other agents in your group have been notified.');
     }
+
+      public function resolve(Ticket $ticket)
+{
+    $agentId = Auth::id(); // récupère l’agent connecté
+
+    $ticket->update(['statut' => TicketStatus::RESOLU->value]);
+
+    Historique::create([
+        'ticket_id' => $ticket->id_ticket,
+        'agent_id' => $agentId,
+        'action' => 'Proposition de solution',
+        'type_action' => ActionType::RESOLUTION,
+        'commentaire' => 'Proposition de solution',
+    ]);
+
+    // Notify user
+    Notification::create([
+        'destinataire_id' => $ticket->utilisateur_id,
+        'type_destinataire' => ActorType::UTILISATEUR,
+        'type' => NotificationType::TICKET_RESOLU,
+        'titre' => 'Votre ticket a une solution proposée',
+        'ticket_id' => $ticket->id_ticket,
+    ]);
+
+    return back()->with('success', 'Le ticket a été marqué comme résolu.');
+}
 }

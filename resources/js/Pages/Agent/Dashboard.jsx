@@ -1,12 +1,13 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AgentLayout from '@/Layouts/AgentLayout';
 
 export default function Dashboard({ auth }) {
     const agent = auth.user;
-    
+
     return (
-        <AuthenticatedLayout>
+        <AgentLayout>
+            
             <Head title="Agent Dashboard" />
             <div className="p-6">
                 <div className="mb-6">
@@ -57,6 +58,6 @@ export default function Dashboard({ auth }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AgentLayout>
     );
 }
