@@ -31,6 +31,9 @@ export default function AuthenticatedLayout({ auth, header, children }) {
                         <Link href={route('admin.units.index')} className="text-blue-600 hover:underline">
                             Units
                         </Link>
+                        <Link href={route('admin.categories.index')} className="text-blue-600 hover:underline">
+                        Categories
+                        </Link>
                     </>
                 )}
 

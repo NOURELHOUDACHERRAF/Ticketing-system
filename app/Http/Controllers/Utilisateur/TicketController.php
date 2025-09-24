@@ -150,59 +150,58 @@ $ticket = Ticket::with([
 
     // ========== Status Management ==========
 
-    public function assignToAgent(Ticket $ticket, $agentId)
-    {
-        $ticket->update(['statut' => TicketStatus::EN_COURS->value, 'agent_id' => $agentId]);
-
-        Historique::create([
-            'ticket_id' => $ticket->id_ticket,
-            'agent_id' => $agentId,
-            'action' => 'Ticket assigné à un agent',
-            'type_action' => ActionType::ASSIGNATION,
-            'commentaire' => 'Ticket assigné à un agent',
+    // public function assignToAgent(Ticket $ticket, $agentId)
+    // {
+    //     $ticket->update(['statut' => TicketStatus::EN_COURS->value, 'agent_id' => $agentId]);
+    //     Historique::create([
+    //         'ticket_id' => $ticket->id_ticket,
+    //         'agent_id' => $agentId,
+    //         'action' => 'Ticket assigné à un agent',
+    //         'type_action' => ActionType::ASSIGNATION,
+    //         'commentaire' => 'Ticket assigné à un agent',
             
-        ]);
+    //     ]);
 
-        // Notify agent
-        Notification::create([
-            'destinataire_id' => $agentId,
-            'type_destinataire' => ActorType::AGENT,
-            'type' => NotificationType::TICKET_ASSIGNE,
-            'titre' => 'Nouveau ticket assigné',
-            'ticket_id' => $ticket->id_ticket,
-        ]);
+    //     // Notify agent
+    //     Notification::create([
+    //         'destinataire_id' => $agentId,
+    //         'type_destinataire' => ActorType::AGENT,
+    //         'type' => NotificationType::TICKET_ASSIGNE,
+    //         'titre' => 'Nouveau ticket assigné',
+    //         'ticket_id' => $ticket->id_ticket,
+    //     ]);
 
-        // Notify user
-        Notification::create([
-            'destinataire_id' => $ticket->utilisateur_id,
-            'type_destinataire' => ActorType::UTILISATEUR,
-            'type' => NotificationType::TICKET_ASSIGNE,
-            'titre' => 'Votre ticket est en cours de traitement',
-            'ticket_id' => $ticket->id_ticket,
-        ]);
-    }
+    //     // Notify user
+    //     Notification::create([
+    //         'destinataire_id' => $ticket->utilisateur_id,
+    //         'type_destinataire' => ActorType::UTILISATEUR,
+    //         'type' => NotificationType::TICKET_ASSIGNE,
+    //         'titre' => 'Votre ticket est en cours de traitement',
+    //         'ticket_id' => $ticket->id_ticket,
+    //     ]);
+    // }
 
-    public function requestHelp(Ticket $ticket, $agentId)
-    {
-        $ticket->update(['statut' => TicketStatus::DEMANDE_AIDE->value]);
+    // public function requestHelp(Ticket $ticket, $agentId)
+    // {
+    //     $ticket->update(['statut' => TicketStatus::DEMANDE_AIDE->value]);
 
-        Historique::create([
-            'ticket_id' => $ticket->id_ticket,
-            'agent_id' => $agentId,
-            'action' => 'Demande d’aide envoyée par agent',
-            'type_action' => ActionType::DEMANDE_AIDE,
-            'commentaire' => 'Demande d’aide envoyée par agent',
-        ]);
+    //     Historique::create([
+    //         'ticket_id' => $ticket->id_ticket,
+    //         'agent_id' => $agentId,
+    //         'action' => 'Demande d’aide envoyée par agent',
+    //         'type_action' => ActionType::DEMANDE_AIDE,
+    //         'commentaire' => 'Demande d’aide envoyée par agent',
+    //     ]);
 
-        // Notify superviseur
-        Notification::create([
-            'destinataire_id' => $ticket->superviseur_id,
-            'type_destinataire' => ActorType::SUPERVISEUR,
-            'type' => NotificationType::DEMANDE_AIDE,
-            'titre' => 'Un agent demande de l’aide',
-            'ticket_id' => $ticket->id_ticket,
-        ]);
-    }
+    //     // Notify superviseur
+    //     Notification::create([
+    //         'destinataire_id' => $ticket->superviseur_id,
+    //         'type_destinataire' => ActorType::SUPERVISEUR,
+    //         'type' => NotificationType::DEMANDE_AIDE,
+    //         'titre' => 'Un agent demande de l’aide',
+    //         'ticket_id' => $ticket->id_ticket,
+    //     ]);
+    // }
 
     public function resolve(Ticket $ticket, $agentId)
     {

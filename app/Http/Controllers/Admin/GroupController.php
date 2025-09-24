@@ -36,7 +36,7 @@ class GroupController extends Controller
     public function store(StoreGroupRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['cree_par'] = auth()->user()?->id ?? AdminModel::query()->value('id_admin');
+        $data['cree_par'] = auth('admin')->user()?->id_admin ?? AdminModel::query()->value('id_admin');
         Groupe::create($data);
         return redirect()->route('admin.groups.index')->with('success', 'Group created');
     }

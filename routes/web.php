@@ -16,6 +16,7 @@ use App\Http\Controllers\Utilisateur\HistoriqueController;
 use App\Http\Controllers\Agent\HistoriqueController as AgentHistoriqueController;
 use App\Http\Controllers\Utilisateur\MessageController;
 use App\Http\Controllers\Agent\LogoutController as AgentLogoutController;
+use App\Http\Controllers\Admin\CategorieController;
 
 
 Route::get('/', function () {
@@ -50,6 +51,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::resource('groups', GroupController::class)->except(['show']);
     Route::resource('agents', AgentController::class)->except(['show']);
     Route::resource('users', AdminUserController::class)->except(['show']);
+    Route::resource('categories', CategorieController::class)->except(['show']);
 
     Route::post('agents/{agent}/assign-group', [AgentController::class, 'assignGroup'])->name('agents.assignGroup');
     Route::post('groups/{group}/set-supervisor', [GroupController::class, 'setSupervisor'])->name('groups.setSupervisor');
@@ -79,6 +81,8 @@ Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function
         ->name('tickets.message');
     Route::post('/tickets/{ticket}/request-help', [\App\Http\Controllers\Agent\TicketController::class, 'requestHelp'])
         ->name('tickets.requestHelp');
+    Route::post('/tickets/{ticket}/assign-agent', [\App\Http\Controllers\Agent\TicketController::class, 'assignToAgent'])
+        ->name('tickets.assignAgent');
          Route::get('/notifications', [AgentNotificationController::class, 'index'])
         ->name('notifications.index');
     Route::get('/historiques', [AgentHistoriqueController::class, 'index'])

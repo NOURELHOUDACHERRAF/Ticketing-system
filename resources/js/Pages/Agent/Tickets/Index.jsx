@@ -1,8 +1,8 @@
-import React from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function Index({ unassignedTickets, assignedTickets, supervisedTickets, agent }) {
+export default function Index({ unassignedTickets, assignedTickets, supervisedTickets, agent, groupAgents }) {
     return (
         <AuthenticatedLayout>
             <Head title="Agent Tickets" />
@@ -26,7 +26,7 @@ export default function Index({ unassignedTickets, assignedTickets, supervisedTi
                             ) : (
                                 <div className="space-y-3">
                                     {unassignedTickets.data.map(ticket => (
-                                        <TicketCard key={ticket.id_ticket} ticket={ticket} type="unassigned" />
+                                        <TicketCard key={ticket.id_ticket} ticket={ticket} type="unassigned" agent={agent} groupAgents={groupAgents} />
                                     ))}
                                 </div>
                             )}
@@ -79,11 +79,25 @@ export default function Index({ unassignedTickets, assignedTickets, supervisedTi
     );
 }
 
-function TicketCard({ ticket, type }) {
+function TicketCard({ ticket, type, agent, groupAgents }) {
     const { post, processing } = useForm();
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedAgent, setSelectedAgent] = useState('');
 
     const handleAssign = () => {
         post(route('agent.tickets.assign', ticket.id_ticket));
+    };
+
+    const handleSupervisorAssign = () => {
+        if (selectedAgent) {
+            router.post(route('agent.tickets.assignAgent', ticket.id_ticket), { agent_id: selectedAgent }, {
+                preserveScroll: true,
+                onFinish: () => {
+                    setShowAssignModal(false);
+                    setSelectedAgent('');
+                },
+            });
+        }
     };
 
     const getStatusColor = (status) => {
@@ -137,13 +151,23 @@ function TicketCard({ ticket, type }) {
                     View
                 </Link>
                 {type === 'unassigned' && (
-                    <button
-                        onClick={handleAssign}
-                        disabled={processing}
-                        className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 disabled:opacity-50"
-                    >
-                        {processing ? 'Assigning...' : 'Assign to Me'}
-                    </button>
+                    <>
+                        <button
+                            onClick={handleAssign}
+                            disabled={processing}
+                            className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 disabled:opacity-50"
+                        >
+                            {processing ? 'Assigning...' : 'Assign to Me'}
+                        </button>
+                        {agent?.est_superviseur && (
+                            <button
+                                onClick={() => setShowAssignModal(true)}
+                                className="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700"
+                            >
+                                Assign to Agent
+                            </button>
+                        )}
+                    </>
                 )}
                 {type === 'supervised' && ticket.agent && (
                     <span className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded">
@@ -151,6 +175,48 @@ function TicketCard({ ticket, type }) {
                     </span>
                 )}
             </div>
+
+            {/* Assignment Modal for Supervisors */}
+            {showAssignModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-semibold mb-4">Assign Ticket to Agent</h3>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium mb-2">Select Agent:</label>
+                            <select
+                                value={selectedAgent}
+                                onChange={(e) => setSelectedAgent(e.target.value)}
+                                className="w-full border rounded px-3 py-2"
+                            >
+                                <option value="">Choose an agent</option>
+                                {groupAgents?.map(agent => (
+                                    <option key={agent.id_agent} value={agent.id_agent}>
+                                        {agent.nom} {agent.prenom}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex gap-2 justify-end">
+                            <button
+                                onClick={() => {
+                                    setShowAssignModal(false);
+                                    setSelectedAgent('');
+                                }}
+                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSupervisorAssign}
+                                disabled={!selectedAgent || processing}
+                                className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
+                            >
+                                {processing ? 'Assigning...' : 'Assign'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -22,15 +22,12 @@ class TicketController extends Controller
     {
         $agent = auth('agent')->user();
         
-        // Get agent's group domain
-        $groupDomain = $agent->groupeRelation?->domaine;
-        
-        // Get unassigned tickets for this agent's group domain (including help requested)
+        // Get unassigned tickets for this agent's group (including help requested)
         $unassignedTickets = Ticket::query()
             ->whereIn('statut', ['NOUVEAU', 'DEMANDE_AIDE'])
             ->whereNull('agent_id')
-            ->whereHas('categorie', function ($query) use ($groupDomain) {
-                $query->where('Nom', $groupDomain);
+            ->whereHas('categorie', function ($query) use ($agent) {
+                $query->where('id_grp', $agent->groupe);
             })
             ->with(['utilisateur', 'categorie'])
             ->orderBy('date_creation', 'desc')
@@ -56,11 +53,17 @@ class TicketController extends Controller
                 ->paginate(10);
         }
 
+        // Get group agents for supervisor assignment
+        $groupAgents = \App\Models\Agent::where('groupe', $agent->groupe)
+            ->where('id_agent', '!=', $agent->id_agent)
+            ->get(['id_agent', 'nom', 'prenom']);
+
         return Inertia::render('Agent/Tickets/Index', [
             'unassignedTickets' => $unassignedTickets,
             'assignedTickets' => $assignedTickets,
             'supervisedTickets' => $supervisedTickets,
             'agent' => $agent,
+            'groupAgents' => $groupAgents,
         ]);
     }
 
@@ -81,16 +84,15 @@ class TicketController extends Controller
             $canAccess = true;
         }
         
-        // Agent's group domain matches ticket category (for unassigned tickets)
-        if (!$canAccess && $ticket->statut === 'NOUVEAU' && $ticket->agent_id === null) {
-            $groupDomain = $agent->groupeRelation?->domaine;
-            if ($ticket->categorie?->Nom === $groupDomain) {
+        // Agent's group matches ticket category (for unassigned tickets)
+        if (!$canAccess && in_array($ticket->statut, ['NOUVEAU','DEMANDE_AIDE'], true) && $ticket->agent_id === null) {
+            if (($ticket->categorie?->id_grp ?? null) === $agent->groupe) {
                 $canAccess = true;
             }
         }
         
         if (!$canAccess) {
-            abort(403, 'You can only access tickets assigned to you, tickets you supervise, or unassigned tickets from your group domain.');
+            abort(403, 'You can only access tickets assigned to you, tickets you supervise, or unassigned tickets from your group.');
         }
 
         $ticket->load(['utilisateur', 'categorie', 'agent', 'messages', 'historiques']);
@@ -105,10 +107,9 @@ class TicketController extends Controller
     {
         $agent = auth('agent')->user();
         
-        // Check if agent can assign this ticket
-        $groupDomain = $agent->groupeRelation?->domaine;
-        if ($ticket->categorie?->Nom !== $groupDomain) {
-            return back()->withErrors(['error' => 'You can only assign tickets from your group domain.']);
+        // Check if agent can assign this ticket (category must belong to agent's group)
+        if (($ticket->categorie?->id_grp ?? null) !== $agent->groupe) {
+            return back()->withErrors(['error' => 'You can only assign tickets from your group.']);
         }
 
         if ($ticket->agent_id !== null) {
@@ -146,9 +147,8 @@ class TicketController extends Controller
             $canAccess = true;
         }
         
-        if (!$canAccess && $ticket->statut === 'NOUVEAU' && $ticket->agent_id === null) {
-            $groupDomain = $agent->groupeRelation?->domaine;
-            if ($ticket->categorie?->Nom === $groupDomain) {
+        if (!$canAccess && in_array($ticket->statut, ['NOUVEAU','DEMANDE_AIDE'], true) && $ticket->agent_id === null) {
+            if (($ticket->categorie?->id_grp ?? null) === $agent->groupe) {
                 $canAccess = true;
             }
         }
@@ -200,9 +200,8 @@ class TicketController extends Controller
             $canAccess = true;
         }
         
-        if (!$canAccess && $ticket->statut === 'NOUVEAU' && $ticket->agent_id === null) {
-            $groupDomain = $agent->groupeRelation?->domaine;
-            if ($ticket->categorie?->Nom === $groupDomain) {
+        if (!$canAccess && in_array($ticket->statut, ['NOUVEAU','DEMANDE_AIDE'], true) && $ticket->agent_id === null) {
+            if (($ticket->categorie?->id_grp ?? null) === $agent->groupe) {
                 $canAccess = true;
             }
         }
@@ -288,4 +287,64 @@ class TicketController extends Controller
 
     return back()->with('success', 'Le ticket a été marqué comme résolu.');
 }
+
+    public function assignToAgent(Request $request, Ticket $ticket)
+    {
+        $supervisor = auth('agent')->user();
+        
+        // Check if supervisor can assign this ticket
+        if (!$supervisor->est_superviseur) {
+            return back()->withErrors(['error' => 'Only supervisors can assign tickets to agents.']);
+        }
+        
+        // Check if ticket belongs to supervisor's group
+        if (($ticket->categorie?->id_grp ?? null) !== $supervisor->groupe) {
+            return back()->withErrors(['error' => 'You can only assign tickets from your group.']);
+        }
+        
+        // Check if ticket is unassigned
+        if ($ticket->agent_id !== null) {
+            return back()->withErrors(['error' => 'This ticket is already assigned.']);
+        }
+        
+        $request->validate([
+            'agent_id' => 'required|exists:agent,id_agent',
+        ]);
+        
+        $agentId = $request->agent_id;
+        
+        // Verify the agent belongs to the supervisor's group
+        $agent = \App\Models\Agent::where('id_agent', $agentId)
+            ->where('groupe', $supervisor->groupe)
+            ->first();
+            
+        if (!$agent) {
+            return back()->withErrors(['error' => 'You can only assign tickets to agents in your group.']);
+        }
+        
+        // Assign ticket
+        $ticket->update([
+            'agent_id' => $agentId,
+            'statut' => 'EN_COURS',
+        ]);
+        
+        // Create history entry
+        $ticket->historiques()->create([
+            'agent_id' => $supervisor->id_agent,
+            'action' => 'Ticket assigned by supervisor',
+            'commentaire' => "Ticket assigned to {$agent->nom} {$agent->prenom} by supervisor",
+            'type_action' => ActionType::ASSIGNATION,
+        ]);
+        
+        // Notify the assigned agent
+        Notification::create([
+            'destinataire_id' => $agentId,
+            'type_destinataire' => ActorType::AGENT,
+            'type' => NotificationType::TICKET_ASSIGNE,
+            'titre' => 'New ticket assigned to you',
+            'ticket_id' => $ticket->id_ticket,
+        ]);
+        
+        return back()->with('success', "Ticket assigned to {$agent->nom} {$agent->prenom} successfully.");
+    }
 }

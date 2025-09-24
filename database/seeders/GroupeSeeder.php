@@ -15,17 +15,17 @@ class GroupeSeeder extends Seeder
         $groups = [
             [
                 'nom' => 'Support Informatique',
-                'domaine' => 'IT',
+                'domaine' => 'hardware',
                 'cree_par' => $adminId,
             ],
             [
                 'nom' => 'Support RH',
-                'domaine' => 'Resources Humaines',
+                'domaine' => 'hr',
                 'cree_par' => $adminId,
             ],
             [
                 'nom' => 'Support Financier',
-                'domaine' => 'Finance',
+                'domaine' => 'reseau',
                 'cree_par' => $adminId,
             ],
         ];

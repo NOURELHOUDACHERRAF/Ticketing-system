@@ -57,7 +57,7 @@ export default function Create() {
                         <option value="">-- Sélectionner une catégorie --</option>
                         {categories.map((cat) => (
                             <option key={cat.id_cat} value={cat.id_cat}>
-                                {cat.nom}
+                                {cat.Nom}
                             </option>
                         ))}
                     </select>
