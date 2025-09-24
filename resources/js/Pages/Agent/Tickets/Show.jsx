@@ -161,22 +161,25 @@ export default function Show({ ticket, agent }) {
           </div>
           <p className="text-gray-700 mb-2">{m.contenu}</p>
 
-          {m.type === "PROPOSITION_SOLUTION" && ticket.statut === 'RESOLU' && (
-            <div className="mt-3 space-x-2">
-              <button
-                onClick={acceptSolution}
-                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
-              >
-                Accepter la solution
-              </button>
-              <button
-                onClick={refuseSolution}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
-              >
-                Refuser la solution
-              </button>
-            </div>
-          )}
+          {m.type === "PROPOSITION_SOLUTION" 
+  && ticket.statut === 'RESOLU' 
+  && !agent && ( // pas d'agent => côté utilisateur
+    <div className="mt-3 space-x-2">
+      <button 
+        onClick={acceptSolution}
+        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+      >
+        Accepter la solution
+      </button>
+      <button 
+        onClick={refuseSolution}
+        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+      >
+        Refuser la solution
+      </button>
+    </div>
+)}
+
         </div>
       );
     })

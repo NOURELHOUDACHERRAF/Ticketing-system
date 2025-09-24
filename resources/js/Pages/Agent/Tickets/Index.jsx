@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AgentLayout from '@/Layouts/AgentLayout';
 
 export default function Index({ unassignedTickets, assignedTickets, supervisedTickets, agent, groupAgents }) {
     return (
-        <AuthenticatedLayout>
+        <AgentLayout>
             <Head title="Agent Tickets" />
             <div className="p-6">
                 <div className="mb-6">
@@ -75,7 +75,7 @@ export default function Index({ unassignedTickets, assignedTickets, supervisedTi
                     )}
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AgentLayout>
     );
 }
 
