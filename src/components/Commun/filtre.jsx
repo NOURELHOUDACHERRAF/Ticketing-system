@@ -116,6 +116,11 @@ export default function FiltersModal({ onClose, onApply }) {
                   <button
                     onClick={() => removeFilter("categories", c)}
                     className="text-white text-xs leading-none w-4 h-4 flex items-center justify-center rounded-full hover:bg-blue-600 transition"
+                      style={{
+                  borderColor: "#0A1F77",
+                  backgroundColor: "white",
+                  color: "#0A1F77",
+                }}
                   >
                     ✕
                   </button>
@@ -158,6 +163,11 @@ export default function FiltersModal({ onClose, onApply }) {
                   <button
                     onClick={() => removeFilter("priorities", p)}
                     className="text-white text-xs leading-none w-4 h-4 flex items-center justify-center rounded-full hover:bg-blue-600 transition"
+                    style={{
+                  borderColor: "#0A1F77",
+                  backgroundColor: "white",
+                  color: "#0A1F77",
+                }}
                   >
                     ✕
                   </button>
@@ -200,6 +210,11 @@ export default function FiltersModal({ onClose, onApply }) {
                   <button
                     onClick={() => removeFilter("statuses", s)}
                     className="text-white text-xs leading-none w-4 h-4 flex items-center justify-center rounded-full hover:bg-blue-600 transition"
+                    style={{
+                  borderColor: "#0A1F77",
+                  backgroundColor: "white",
+                  color: "#0A1F77",
+                }}
                   >
                     ✕
                   </button>

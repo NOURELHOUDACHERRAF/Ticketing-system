@@ -14,11 +14,11 @@ import {
   Calendar,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import FiltersModal from "./filtre";
-import SortModal from "./trier";
-import Sidebar from "./sidebar";
-import { useUser } from "./UserContext";
-import Header from "./Header";
+import FiltersModal from "../Commun/filtre";
+import SortModal from "../Commun/trier";
+import Sidebar from "../Commun/sidebar";
+import { useUser } from "../Commun/UserContext";
+import Header from "../Commun/Header";
 import CreateTicketModal from "./nvTicket";
 import SonelDeskTicket from "./DescriptionTicket";
 

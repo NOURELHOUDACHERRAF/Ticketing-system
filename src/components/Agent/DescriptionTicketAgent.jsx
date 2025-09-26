@@ -1,9 +1,9 @@
 import  { useState, useRef } from "react";
 import { ArrowLeft, Edit3, Paperclip, Send } from "lucide-react";
-import Sidebar from "./sidebar";
+import Sidebar from "../Commun/sidebar.jsx";
 import { useParams, useNavigate } from "react-router-dom";
-import FiltreTransfere from "./TransfererTicket";
-export default function DescriptionTicket() {
+
+export default function DescriptionTicketAgent() {
   const [newMessage, setNewMessage] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [attachment, setAttachment] = useState(null);
@@ -11,7 +11,6 @@ export default function DescriptionTicket() {
   const fileInputRef = useRef(null);
   const { id } = useParams();
   const navigate = useNavigate();
-const [showTransferModal, setShowTransferModal] = useState(false);
 
   const handleRetour = () => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -57,17 +56,13 @@ const [showTransferModal, setShowTransferModal] = useState(false);
           </button>
 
           <div className="flex items-center justify-between mb-6">
-             <h1 className="text-3xl font-bold text-gray-900 mb-8">
+            <h1 className="text-2xl font-bold text-gray-900">
               Ticket n°{id}
             </h1>
-            <button 
-  onClick={() => setShowTransferModal(true)}
-  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
-  style={{ backgroundColor: "#4F7DF3" }}
->
-  Transferer le ticket
-</button>
-
+            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
+            style={{ backgroundColor: "#4F7DF3" }}>
+              Demande d’aide
+            </button>
           </div>
 
           {}
@@ -240,16 +235,6 @@ const [showTransferModal, setShowTransferModal] = useState(false);
           </div>
         </div>
       </div>
-      {showTransferModal && (
-  <FiltreTransfere 
-    onClose={() => setShowTransferModal(false)} 
-    onApply={(filters) => {
-      console.log("Ticket transféré avec:", filters);
-      setShowTransferModal(false);
-    }} 
-  />
-)}
-
     </div>
   );
 }

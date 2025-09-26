@@ -1,7 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Home, User, Clock, LogOut, X } from "lucide-react";
-import Logo from "../assets/LOGO.svg";
+import Logo from "../../assets/LOGO.svg";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   return (
     <aside

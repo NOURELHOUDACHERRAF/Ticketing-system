@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 
-// ✅ Create Context
 const UserContext = createContext();
 
-// ✅ Provider Component
 export const UserProvider = ({ children }) => {
   // You can fetch/set this data later from an API or login form
   const [user, setUser] = useState({

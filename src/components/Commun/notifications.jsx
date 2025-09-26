@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X, Filter } from "lucide-react"; 
 import Sidebar from "./sidebar";
 import { useUser } from "./UserContext";
-import Header from "./Header";
+import Header from "./Header"; 
 import { useNavigate } from "react-router-dom";
 import SimpleFiltersModal from "./filtreNotif";
 const Notifications = () => {

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Search, Bell, Calendar, Filter, List } from "lucide-react";
-import FiltersModal from "./filtre";
-import SortModal from "./trier";
-import Sidebar from "./sidebar";
-import { useUser } from "./UserContext";
-import Header from "./Header";
+import FiltersModal from "../Commun/filtre";
+import SortModal from "../Commun/trier";
+import Sidebar from "../Commun/sidebar.jsx";
+import { useUser } from "../Commun/UserContext";
+import Header from "../Commun/Header";
+import { Link } from "react-router-dom";
 
 const TicketDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -221,12 +222,13 @@ const TicketDashboard = () => {
                     </td>
                     <td className="px-4 py-3 text-gray-700">{t.assignedTo}</td>
                     <td className="px-4 py-3">
-                      <button
-                        className="w-full mt-3 px-4 py-2 rounded-lg flex items-center justify-center shadow-md transition-colors"
-                        style={{ backgroundColor: "#2f6bff", color: "white" }}
-                      >
-                        Consulter
-                      </button>
+                     <Link
+                    to={`/ticket/1456`}
+                    className="px-4 py-2 rounded-lg flex items-center justify-center shadow-md transition-colors"
+                    style={{ backgroundColor: "#2f6bff", color: "white" }}
+                  >
+                    Consulter
+                  </Link>
                     </td>
                   </tr>
                 ))}

@@ -1,6 +1,6 @@
 import  { useState, useRef } from "react";
 import { ArrowLeft, Edit3, Paperclip, Send } from "lucide-react";
-import Sidebar from "./sidebar";
+import Sidebar from "../Commun/sidebar";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function SonelDeskTicket() {
