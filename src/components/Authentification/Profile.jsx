@@ -46,10 +46,10 @@ const Profile = () => {
       <main className="flex-1 flex flex-col min-w-0">
         <Header setSidebarOpen={setSidebarOpen} title="Profil" />
 
-        {/* Profile Section */}
+        {}//section profil
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 overflow-auto">
           <section className="relative bg-white rounded-lg shadow-md max-w-2xl w-full p-6 sm:p-8">
-            {/* Edit Button */}
+            {}//boutan modifier
             <button
               onClick={() => setIsModalOpen(true)}
               className="absolute top-4 right-4 bg-blue-100 text-blue-600 p-2 rounded-full shadow hover:bg-blue-200"
@@ -57,7 +57,7 @@ const Profile = () => {
               <Edit size={18} className="text-blue-500" />
             </button>
 
-            {/* Avatar */}
+            {}
             <div className="flex flex-col items-center mb-8">
               <div className="relative">
                 <img
@@ -68,7 +68,7 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Profile Info */}
+            {}
             <div className="grid md:grid-cols-3 gap-6 text-gray-700 mb-8">
               <div>
                 <p className="text-sm text-gray-500">Nom</p>
@@ -96,7 +96,7 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Ticket Table */}
+            {}//la table des ticket
             <div className="overflow-hidden rounded-lg border border-gray-200">
               <table className="w-full text-sm text-center">
                 <thead className="bg-gray-50 text-gray-600 uppercase">
@@ -121,11 +121,11 @@ const Profile = () => {
         </div>
       </main>
 
-      {/*  Modal Form  */}
+      {}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
 <div className="bg-white rounded-lg shadow-xl w-full max-w-sm p-4 relative border border-gray-200 max-h-[650px] ">
-            {/* Close Button */}
+            {}
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
@@ -208,7 +208,7 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Save Button */}
+            {}
             <div className="mt-6 flex justify-end">
               <button
                 onClick={handleSave}
