@@ -25,4 +25,9 @@ class Categorie extends Model
     {
         return $this->hasMany(Ticket::class, 'categorie_id', 'id_cat');
     }
+
+    public function getNomAttribute($value)
+    {
+        return ucfirst($this->attributes['Nom']);
+    }
 }

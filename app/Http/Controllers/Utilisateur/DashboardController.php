@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Utilisateur;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
+use App\Models\Categorie;
+use App\Models\Notification;
+use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
 use Inertia\Inertia;
 
@@ -13,6 +16,7 @@ class DashboardController extends Controller
     {
         $user = auth('utilisateur')->user();
 
+        // Récupération des tickets (votre code existant)
         $tickets = $user->tickets()
             ->with(['agent', 'categorie'])
             ->orderBy('date_creation', 'desc')
@@ -29,6 +33,7 @@ class DashboardController extends Controller
                 'date_creation' => $ticket->date_creation->format('Y-m-d H:i'),
             ]);
 
+        // Statistiques des tickets (votre code existant)
         $ticketStats = [
             'total'    => $user->tickets()->count(),
             'nouveau'  => $user->tickets()->where('statut', TicketStatus::NOUVEAU)->count(),
@@ -36,10 +41,22 @@ class DashboardController extends Controller
             'resolu'   => $user->tickets()->where('statut', TicketStatus::RESOLU)->count(),
         ];
 
-        return Inertia::render('Utilisateur/Dashboard', [
-            'user' => $user,
-            'tickets' => $tickets,
-            'ticketStats' => $ticketStats,
-        ]);
+        // Compter les notifications non lues
+       $unreadNotificationsCount = Notification::where('destinataire_id', $user->id)
+       ->where('type_destinataire', 'utilisateur')
+       ->count(); 
+
+       return Inertia::render('Utilisateur/Dashboard', [
+      'user' => $user,
+      'tickets' => $tickets,
+      'ticketStats' => $ticketStats,
+      'unreadNotificationsCount' => $unreadNotificationsCount,
+      'categories' => Categorie::all(['id_cat', 'Nom']),
+      'priorities' => collect(TicketPriority::cases())->map(fn($p) => [
+       'value' => $p->value,
+       'label' => ucfirst(strtolower($p->value)),
+    ]),
+]);
+
     }
 }

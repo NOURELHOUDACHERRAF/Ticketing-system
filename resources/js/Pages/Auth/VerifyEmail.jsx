@@ -1,50 +1,51 @@
-import PrimaryButton from '@/Components/PrimaryButton';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { useForm } from "@inertiajs/react";
 
 export default function VerifyEmail({ status }) {
-    const { post, processing } = useForm({});
+  const { post, processing } = useForm({});
 
-    const submit = (e) => {
-        e.preventDefault();
+  const submit = (e) => {
+    e.preventDefault();
+    post(route("verification.send"));
+  };
 
-        post(route('verification.send'));
-    };
+  return (
+    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <img src="/assets/LOGO.svg" alt="Logo" className="w-12 h-12" />
+          <b className="text-2xl font-bold text-blue-600">SONELDESK</b>
+        </div>
 
-    return (
-        <GuestLayout>
-            <Head title="Email Verification" />
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 text-center mb-4">
+          Vérification d’email
+        </h2>
 
-            <div className="mb-4 text-sm text-gray-600">
-                Thanks for signing up! Before getting started, could you verify
-                your email address by clicking on the link we just emailed to
-                you? If you didn't receive the email, we will gladly send you
-                another.
-            </div>
+        <p className="text-gray-600 text-center mb-6">
+          Merci de vérifier votre adresse email en cliquant sur le lien que nous vous avons envoyé.
+        </p>
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
-                </div>
-            )}
+        {status === "verification-link-sent" && (
+          <div className="mb-4 text-sm text-green-600 text-center">
+            Un nouveau lien de vérification a été envoyé à votre adresse email.
+          </div>
+        )}
 
-            <form onSubmit={submit}>
-                <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>
-                        Resend Verification Email
-                    </PrimaryButton>
+        <form onSubmit={submit} className="space-y-4">
+          <button
+            type="submit"
+            disabled={processing}
+            className="w-full py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 disabled:opacity-50"
+          >
+            {processing ? "Envoi en cours..." : "Renvoyer le lien"}
+          </button>
+        </form>
 
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Log Out
-                    </Link>
-                </div>
-            </form>
-        </GuestLayout>
-    );
+        <div className="mt-6 text-center">
+          <a href={route("logout")} method="post" as="button" className="text-sm text-red-600 hover:underline">
+            Déconnexion
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -23,4 +23,21 @@ class NotificationController extends Controller
             'user' => $user,
         ]);
     }
+ public function markAsRead($id)
+{
+    $notification = Notification::findOrFail($id);
+    $notification->update(['read_at' => now()]); // si ta colonne existe
+    return back();
+}
+public function destroy($id_notification)
+{
+    $notification = Notification::where('id_notification', $id_notification)
+        ->where('destinataire_id', auth()->id()) // sécurité : supprime seulement les notifs de l’utilisateur connecté
+        ->firstOrFail();
+
+    $notification->delete();
+
+    return back()->with('success', 'Notification supprimée.');
+}
+
 }

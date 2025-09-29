@@ -17,6 +17,8 @@ use App\Http\Controllers\Agent\HistoriqueController as AgentHistoriqueController
 use App\Http\Controllers\Utilisateur\MessageController;
 use App\Http\Controllers\Agent\LogoutController as AgentLogoutController;
 use App\Http\Controllers\Admin\CategorieController;
+use App\Http\Controllers\ProfileController;
+
 
 
 Route::get('/', function () {
@@ -93,32 +95,66 @@ Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function
 
 
 // ----------- Utilisateur routes -----------
-Route::prefix('utilisateur')->name('utilisateur.')->middleware('auth:utilisateur')->group(function () {
-    Route::get('/dashboard', [UtilisateurDashboardController::class, 'index'])
-        ->name('dashboard');
+Route::prefix('utilisateur')
+    ->name('utilisateur.')
+    ->middleware('auth:utilisateur')
+    ->group(function () {
+        
+        // Tableau de bord
+        Route::get('/dashboard', [UtilisateurDashboardController::class, 'index'])
+            ->name('dashboard');
 
-    Route::get('/tickets/create', [UtilisateurTicketController::class, 'create'])
-        ->name('tickets.create');
-    Route::post('/tickets', [UtilisateurTicketController::class, 'store'])
-        ->name('tickets.store');
-    Route::get('/tickets/{ticket}', [UtilisateurTicketController::class, 'show'])
-        ->name('tickets.show');
+        // Tickets
+        Route::get('/tickets', [UtilisateurTicketController::class, 'index'])
+            ->name('tickets.index'); // <-- pour ton Dashboard.jsx (liste)
+        Route::get('/tickets/create', [UtilisateurTicketController::class, 'create'])
+            ->name('tickets.create');
+        Route::post('/tickets', [UtilisateurTicketController::class, 'store'])
+            ->name('tickets.store');
+        Route::get('/tickets/{ticket}', [UtilisateurTicketController::class, 'show'])
+            ->name('tickets.show');
 
-    Route::post('/tickets/{ticket}/messages', [MessageController::class, 'store'])
-        ->name('tickets.messages.store');
+        Route::post('/tickets/{ticket}/messages', [MessageController::class, 'store'])
+            ->name('tickets.messages.store');
 
-    Route::post('/tickets/{ticket}/accept-solution', [UtilisateurTicketController::class, 'acceptSolution'])
-        ->name('tickets.acceptSolution');
+        Route::post('/tickets/{ticket}/accept-solution', [UtilisateurTicketController::class, 'acceptSolution'])
+            ->name('tickets.acceptSolution');
 
-    Route::post('/tickets/{ticket}/refuse-solution', [UtilisateurTicketController::class, 'refuseSolution'])
-        ->name('tickets.refuseSolution');
+        Route::post('/tickets/{ticket}/refuse-solution', [UtilisateurTicketController::class, 'refuseSolution'])
+            ->name('tickets.refuseSolution');
 
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->name('notifications.index');
-    Route::get('/historiques', [HistoriqueController::class, 'index'])
-        ->name('historiques.index');
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
 
-    Route::post('/logout', [LogoutController::class, '__invoke'])->name('logout');
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.read');
+
+    Route::delete('/notifications/{id_notification}', [NotificationController::class, 'destroy'])
+    ->name('notifications.destroy');
+
+
+        // Historiques
+        Route::get('/historiques', [HistoriqueController::class, 'index'])
+            ->name('historiques.index');
+
+        // Welcome page utilisateur (si besoin)
+        Route::get('/welcome', function () {
+            return Inertia::render('Utilisateur/Welcome');
+        })->name('welcome');
+
+        // Déconnexion
+        Route::post('/logout', [LogoutController::class, '__invoke'])
+            ->name('logout');
+    });
+
+// ----------- Profile routes (communs aux utilisateurs connectés) -----------
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 require __DIR__ . '/auth.php';

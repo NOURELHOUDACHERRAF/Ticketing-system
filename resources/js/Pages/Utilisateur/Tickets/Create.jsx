@@ -1,105 +1,130 @@
-import { useForm, Link, usePage } from '@inertiajs/react';
-import UtilisateurLayout from '@/Layouts/UtilisateurLayout';
-import { route } from 'ziggy-js';
+import { useForm, usePage } from "@inertiajs/react";
+import { X } from "lucide-react";
+import React from "react";
 
-export default function Create() {
-    const { categories, priorities, user } = usePage().props;
+export default function create({ open, onClose }) {
+  const { categories, priorities } = usePage().props;
 
-    const { data, setData, post, processing, errors } = useForm({
-        type: '',
-        description: '',
-        priorite: '',
-        categorie_id: '',
+  const { data, setData, post, processing, errors, reset } = useForm({
+  type: "",
+  description: "",
+  categorie_id: "",
+  priorite: "",   
+  piece_jointe: null,
+});
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post(route("utilisateur.tickets.store"), {
+      onSuccess: () => {
+        reset();
+        onClose();
+      },
     });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post(route('utilisateur.tickets.store'));
-    };
+  if (!open) return null;
 
-    return (
-        <UtilisateurLayout user={user}>
-            <h2 className="text-xl font-semibold mb-4">Créer un Ticket</h2>
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg">
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-bold text-gray-800">Nouveau ticket</h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+            <X size={22} className="text-gray-500" />
+          </button>
+        </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow">
-                {/* Type */}
-                <div>
-                    <label className="block mb-1 font-medium">Titre</label>
-                    <input
-                        type="text"
-                        value={data.type}
-                        onChange={(e) => setData('type', e.target.value)}
-                        className="w-full border rounded p-2"
-                    />
-                    {errors.type && <div className="text-red-600">{errors.type}</div>}
-                </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Sujet</label>
+            <input
+  type="text"
+  value={data.type}
+  onChange={(e) => setData("type", e.target.value)}
+  className="w-full px-3 py-2 border rounded-lg"
+/>
+{errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
 
-                {/* Description */}
-                <div>
-                    <label className="block mb-1 font-medium">Description</label>
-                    <textarea
-                        value={data.description}
-                        onChange={(e) => setData('description', e.target.value)}
-                        className="w-full border rounded p-2"
-                        rows="4"
-                    />
-                    {errors.description && <div className="text-red-600">{errors.description}</div>}
-                </div>
+          </div>
 
-                {/* Catégorie */}
-                <div>
-                    <label className="block mb-1 font-medium">Catégorie</label>
-                    <select
-                        value={data.categorie_id}
-                        onChange={(e) => setData('categorie_id', e.target.value)}
-                        className="w-full border rounded p-2"
-                    >
-                        <option value="">-- Sélectionner une catégorie --</option>
-                        {categories.map((cat) => (
-                            <option key={cat.id_cat} value={cat.id_cat}>
-                                {cat.Nom}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.categorie_id && <div className="text-red-600">{errors.categorie_id}</div>}
-                </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Catégorie</label>
+            <select
+              value={data.categorie_id}
+              onChange={(e) => setData("categorie_id", e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg"
+            >
+              <option value="">-- Sélectionner --</option>
+              {categories.map((c) => (
+                <option key={c.id_cate} value={c.id_cat}>
+                  {c.Nom}
+                </option>
+              ))}
+            </select>
+            {errors.categorie_id && <p className="text-red-500 text-sm">{errors.categorie_id}</p>}
+          </div>
 
-                {/* Priorité */}
-                <div>
-                    <label className="block mb-1 font-medium">Priorité</label>
-                    <select
-                        value={data.priorite}
-                        onChange={(e) => setData('priorite', e.target.value)}
-                        className="w-full border rounded p-2"
-                    >
-                        <option value="">-- Sélectionner une priorité --</option>
-                        {priorities.map((prio) => (
-                            <option key={prio} value={prio}>
-                                {prio}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.priorite && <div className="text-red-600">{errors.priorite}</div>}
-                </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Priorité</label>
+           <select
+  value={data.priorite}
+  onChange={(e) => setData("priorite", e.target.value)}
+  className="w-full px-3 py-2 border rounded-lg"
+>
+  <option value="">-- Sélectionner --</option>
+  {priorities.map((p) => (
+    <option key={p.value} value={p.value}>
+      {p.label}
+    </option>
+  ))}
+</select>
+{errors.priorite && <p className="text-red-500 text-sm">{errors.priorite}</p>}
 
-                {/* Boutons */}
-                <div className="flex justify-between mt-6">
-                    <Link
-                        href={route('utilisateur.dashboard')}
-                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-                    >
-                        Annuler
-                    </Link>
+          
+          </div>
 
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Créer
-                    </button>
-                </div>
-            </form>
-        </UtilisateurLayout>
-    );
+          <div>
+            <label className="block text-sm font-medium mb-1">Description</label>
+            <textarea
+              value={data.description}
+              onChange={(e) => setData("description", e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg"
+              rows={4}
+            />
+            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Pièce jointe</label>
+            <input
+              type="file"
+              onChange={(e) => setData("piece_jointe", e.target.files[0])}
+              className="w-full"
+            />
+            {errors.piece_jointe && <p className="text-red-500 text-sm">{errors.piece_jointe}</p>}
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg border bg-gray-100 hover:bg-gray-200"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={processing}
+              className="px-4 py-2 rounded-lg bg-[#2f6bff] text-white hover:bg-blue-600"
+            >
+              {processing ? "Envoi..." : "Créer"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }

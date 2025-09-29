@@ -2,62 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): Response
+    // Affichage du profil
+    public function edit(Request $request)
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
 
-        Auth::logout();
+        return Inertia::render('Profile/Show', [
+            'auth' => [
+                'user' => [
+                    'id_utilisateur'   => $user->id_utilisateur,
+                    'nom'              => $user->nom,
+                    'prenom'           => $user->prenom,
+                    'login'            => $user->login,
+                    'email'            => $user->email,
+                    'telephone'        => $user->telephone,
+                    'date_activation'  => $user->date_activation,
+                    'date_expiration'  => $user->date_expiration,
+                    'actif'            => $user->actif,
+                    'unit_org'         => $user->Unit_org,
+                    'cree_par'         => $user->cree_par,
+                ]
+            ]
+        ]);
+    }
 
-        $user->delete();
+    // Mise à jour → seul téléphone modifiable
+    public function update(Request $request)
+    {
+        $user = $request->user();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $validated = $request->validate([
+            'telephone' => ['nullable', 'string', 'max:20'],
+        ]);
 
-        return Redirect::to('/');
+        $user->update([
+            'telephone' => $validated['telephone'],
+        ]);
+
+        return back()->with('success', 'Téléphone mis à jour avec succès.');
     }
 }
