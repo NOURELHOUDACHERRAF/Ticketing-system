@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Enums;
+
+enum NotificationType: string
+{
+	case NOUVEAU_TICKET = 'NOUVEAU_TICKET';
+	case DEMANDE_AIDE = 'DEMANDE_AIDE';
+	case TRANSFERT_APPROUVE = 'TRANSFERT_APPROUVE';
+	case TICKET_ASSIGNE = 'TICKET_ASSIGNE';
+	case TICKET_RESOLU = 'TICKET_RESOLU';
+	case NOUVEAU_MESSAGE = 'NOUVEAU_MESSAGE';
+}
