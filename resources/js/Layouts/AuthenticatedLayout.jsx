@@ -14,7 +14,7 @@ export default function AuthenticatedLayout({ auth, children }) {
 
   return (
     <div className="flex h-screen bg-blue-50 font-poppins overflow-hidden">
-      {/* Mobile overlay */}
+      {}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -22,7 +22,7 @@ export default function AuthenticatedLayout({ auth, children }) {
         />
       )}
 
-      {/* Sidebar */}
+      {}
       <div className="hidden lg:flex">
         <Sidebar />
       </div>
@@ -32,7 +32,7 @@ export default function AuthenticatedLayout({ auth, children }) {
         </div>
       )}
 
-      {/* Main */}
+      {}
       <div className="flex-1 flex flex-col">
         <Header setSidebarOpen={setSidebarOpen} user={user} />
         <main className="flex-1 p-6 overflow-auto">{children}</main>

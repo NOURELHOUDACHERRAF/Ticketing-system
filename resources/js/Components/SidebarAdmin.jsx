@@ -13,18 +13,18 @@ import {
 } from "lucide-react";
 
 export default function Sidebar() {
-  const { auth } = usePage().props; // get logged-in admin
+  const { auth } = usePage().props; 
 
   return (
     <aside className="w-64 bg-blue-900 text-white min-h-screen flex flex-col">
-      {/* Logo */}
+      {}
       <div className="flex items-center gap-2 p-4 border-b border-blue-700">
                 <img src={Logo} alt="Logo" className="h-10 w-auto" />
 
         <span className="text-lg font-bold">SONELDESK</span>
       </div>
 
-      {/* Navigation */}
+      {}
       <nav className="flex-1 mt-4 space-y-1">
         <Link
           href={route("admin.home")}
@@ -61,7 +61,7 @@ export default function Sidebar() {
           <Building className="w-5 h-5" /> Unités
         </Link>
 
-        {/* Profile link (same style as others) */}
+        {}
         <Link
           href={route("admin.profile.edit")}
           className="px-4 py-2 hover:bg-blue-700 flex items-center gap-3"
@@ -70,7 +70,7 @@ export default function Sidebar() {
         </Link>
       </nav>
 
-      {/* Logout */}
+      {}
       <Link
         href={route("admin.logout")}
         method="post"

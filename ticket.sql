@@ -152,4 +152,8 @@ CREATE TABLE notification (
     INDEX idx_destinataire_notif (destinataire_id, type_destinataire),
     INDEX idx_type (type),
     INDEX idx_ticket_notif (ticket_id)
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> ff10cecbc3fa11f316b62ac9ff2dbc56bc595150

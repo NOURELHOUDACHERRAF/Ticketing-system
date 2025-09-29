@@ -20,9 +20,9 @@ export default function Create() {
       <Head title="Nouvelle unité" />
 
       <div className="p-6 max-w-3xl mx-auto">
-        {/* Card */}
+        {}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
+          {}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">Créer une unité</h1>
             <Link
@@ -33,9 +33,9 @@ export default function Create() {
             </Link>
           </div>
 
-          {/* Form */}
+          {}
           <form onSubmit={submit} className="p-6 space-y-6">
-            {/* Num */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Num
@@ -51,7 +51,7 @@ export default function Create() {
               )}
             </div>
 
-            {/* Name */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Nom
@@ -66,7 +66,7 @@ export default function Create() {
               )}
             </div>
 
-            {/* Abbreviation */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Abréviation
@@ -83,7 +83,7 @@ export default function Create() {
               )}
             </div>
 
-            {/* Submit */}
+            {}
             <div className="flex justify-end">
               <button
                 disabled={processing}

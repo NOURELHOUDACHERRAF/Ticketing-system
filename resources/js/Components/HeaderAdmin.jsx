@@ -13,20 +13,18 @@ const Header = ({ setSidebarOpen }) => {
   const day = today.getDate();
   const month = today.toLocaleString("fr-FR", { month: "short" });
 
-  // State for search
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim() !== "") {
-      // Redirect to search results (you can change route as needed)
       router.get(route("admin.search"), { query: searchQuery });
     }
   };
 
   return (
     <header className="bg-white border-b px-4 sm:px-6 py-3 flex items-center justify-between">
-      {/* Left */}
+      {}
       <div className="flex items-center gap-4">
         <button
           className="lg:hidden text-gray-700"
@@ -39,9 +37,9 @@ const Header = ({ setSidebarOpen }) => {
         </p>
       </div>
 
-      {/* Right */}
+      {}
       <div className="flex items-center gap-4">
-        {/* Search bar */}
+        {}
         <form onSubmit={handleSearch} className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
@@ -53,7 +51,7 @@ const Header = ({ setSidebarOpen }) => {
           />
         </form>
 
-        {/* Date */}
+        {}
         <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg text-sm text-gray-700">
           <Calendar className="w-4 h-4 text-blue-600" />
           <span>
@@ -61,7 +59,7 @@ const Header = ({ setSidebarOpen }) => {
           </span>
         </div>
 
-        {/* Profile */}
+        {}
         <Link
           href={route("admin.profile.edit")}
           className="flex items-center gap-2 hover:opacity-80"

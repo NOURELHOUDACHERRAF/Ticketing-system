@@ -11,7 +11,7 @@ export default function Index({ units }) {
       <Head title="Units" />
 
       <div className="p-6 max-w-6xl mx-auto">
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Liste des unités</h1>
           <Link
@@ -22,14 +22,14 @@ export default function Index({ units }) {
           </Link>
         </div>
 
-        {/* Flash message */}
+        {}
         {flash?.success && (
           <div className="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 text-sm font-medium shadow">
             {flash.success}
           </div>
         )}
 
-        {/* Table Card */}
+        {}
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-100 text-gray-700">
@@ -76,7 +76,7 @@ function Row({ u }) {
       <td className="px-6 py-3 text-gray-700">{u.nom}</td>
       <td className="px-6 py-3 text-gray-700">{u.Abreviation ?? "-"}</td>
       <td className="px-6 py-3 text-right flex items-center justify-end gap-3">
-        {/* Edit button */}
+        {}
         <Link
           href={route("admin.units.edit", u.Num)}
           className="text-blue-600 hover:underline font-medium"
@@ -84,7 +84,7 @@ function Row({ u }) {
           Modifier
         </Link>
 
-        {/* Delete button */}
+        {}
         <button
           onClick={handleDelete}
           disabled={processing}

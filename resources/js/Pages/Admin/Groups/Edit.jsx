@@ -19,9 +19,9 @@ export default function Edit({ group, agents }) {
       <Head title={`Modifier Groupe ${group.nom}`} />
 
       <div className="p-6 max-w-3xl mx-auto">
-        {/* Card */}
+        {}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
+          {}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">
               Modifier le groupe
@@ -34,9 +34,9 @@ export default function Edit({ group, agents }) {
             </Link>
           </div>
 
-          {/* Form */}
+          {}
           <form onSubmit={submit} className="p-6 space-y-6">
-            {/* Group name */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Nom du groupe
@@ -51,7 +51,7 @@ export default function Edit({ group, agents }) {
               )}
             </div>
 
-            {/* Domain */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Domaine
@@ -66,7 +66,7 @@ export default function Edit({ group, agents }) {
               )}
             </div>
 
-            {/* Supervisor */}
+            {}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-800">
                 Superviseur
@@ -90,7 +90,7 @@ export default function Edit({ group, agents }) {
               )}
             </div>
 
-            {/* Submit */}
+            {}
             <div className="flex justify-end">
               <button
                 disabled={processing}

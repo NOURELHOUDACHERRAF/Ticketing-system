@@ -24,9 +24,9 @@ export default function Create({ groups }) {
       <Head title="New Agent" />
 
       <div className="p-6 max-w-3xl mx-auto">
-        {/* Card */}
+        {}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
+          {}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">Créer un agent</h1>
             <Link
@@ -37,10 +37,10 @@ export default function Create({ groups }) {
             </Link>
           </div>
 
-          {/* Form */}
+          {}
           <form onSubmit={submit} className="p-6 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Login */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Login
@@ -55,7 +55,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Password */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Mot de passe
@@ -73,7 +73,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* First name */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Prénom
@@ -88,7 +88,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Last name */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Nom
@@ -103,7 +103,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Email */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Email
@@ -119,7 +119,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Phone */}
+              {}
               <div>
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Téléphone
@@ -136,7 +136,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Group */}
+              {}
               <div className="sm:col-span-2">
                 <label className="block text-sm font-semibold mb-2 text-gray-800">
                   Groupe
@@ -160,7 +160,7 @@ export default function Create({ groups }) {
                 )}
               </div>
 
-              {/* Supervisor */}
+              {}
               <div className="sm:col-span-2 flex items-center gap-2">
                 <input
                   id="super"
@@ -177,7 +177,7 @@ export default function Create({ groups }) {
               </div>
             </div>
 
-            {/* Submit */}
+            {}
             <div className="flex justify-end">
               <button
                 disabled={processing}
