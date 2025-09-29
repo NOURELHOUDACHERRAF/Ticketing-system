@@ -159,7 +159,13 @@ class TicketController extends Controller
 
         $request->validate([
             'contenu' => 'required|string|max:1000',
+            'piece_jointe' => 'nullable|file|max:10240',
         ]);
+
+        $path = null;
+        if ($request->hasFile('piece_jointe')) {
+            $path = $request->file('piece_jointe')->store('messages', 'public');
+        }
 
         // Create message
         $message = MessageTicket::create([
@@ -167,6 +173,7 @@ class TicketController extends Controller
             'expediteur_id' => $agent->id_agent,
             'type_expediteur' => ActorType::AGENT,
             'contenu' => $request->contenu,
+            'piece_jointe' => $path,
         ]);
 
         // Create notification for the user who created the ticket

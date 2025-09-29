@@ -18,6 +18,7 @@ use App\Http\Controllers\Utilisateur\MessageController;
 use App\Http\Controllers\Agent\LogoutController as AgentLogoutController;
 use App\Http\Controllers\Admin\CategorieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Agent\ProfileController as AgentProfileController;
 
 
 
@@ -66,8 +67,47 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function () {
     Route::get('/dashboard', function () {
         $agent = auth('agent')->user();
+
+        // Fetch datasets for dashboard tabs using same logic as Agent Tickets page
+        $unassignedTickets = \App\Models\Ticket::query()
+            ->whereIn('statut', ['NOUVEAU', 'DEMANDE_AIDE'])
+            ->whereNull('agent_id')
+            ->whereHas('categorie', function ($query) use ($agent) {
+                $query->where('id_grp', $agent->groupe);
+            })
+            ->with(['utilisateur', 'categorie'])
+            ->orderBy('date_creation', 'desc')
+            ->paginate(6);
+
+        $assignedTickets = \App\Models\Ticket::query()
+            ->where('agent_id', $agent->id_agent)
+            ->with(['utilisateur', 'categorie'])
+            ->orderBy('date_creation', 'desc')
+            ->paginate(6);
+
+        $supervisedTickets = collect();
+        if ($agent->est_superviseur) {
+            $supervisedTickets = \App\Models\Ticket::query()
+                ->whereHas('categorie.groupe', function ($query) use ($agent) {
+                    $query->where('superviseur_id', $agent->id_agent);
+                })
+                ->where('agent_id', '!=', $agent->id_agent)
+                ->with(['utilisateur', 'categorie', 'agent'])
+                ->orderBy('date_creation', 'desc')
+                ->paginate(6);
+        }
+
+        // Group agents list for supervisor assignment from dashboard
+        $groupAgents = \App\Models\Agent::where('groupe', $agent->groupe)
+            ->where('id_agent', '!=', $agent->id_agent)
+            ->get(['id_agent', 'nom', 'prenom']);
+
         return Inertia::render('Agent/Dashboard', [
             'auth' => ['user' => $agent],
+            'assignedTickets' => $assignedTickets,
+            'unassignedTickets' => $unassignedTickets,
+            'supervisedTickets' => $supervisedTickets,
+            'groupAgents' => $groupAgents,
         ]);
     })->name('dashboard');
 
@@ -90,6 +130,21 @@ Route::prefix('agent')->name('agent.')->middleware('auth:agent')->group(function
     Route::get('/historiques', [AgentHistoriqueController::class, 'index'])
         ->name('historiques.index');
     Route::post('/logout', [AgentLogoutController::class, '__invoke'])->name('logout');
+    Route::get('/profile', function () {
+        $agent = auth('agent')->user();
+        return Inertia::render('Agent/Profile', [
+            'auth' => ['user' => $agent],
+        ]);
+    })->name('profile');
+    Route::get('/profile/edit', [AgentProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [AgentProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/password', function () {
+        $agent = auth('agent')->user();
+        return Inertia::render('Agent/Profile/Password', [
+            'auth' => ['user' => $agent],
+        ]);
+    })->name('profile.password');
+    Route::post('/profile/password', [AgentProfileController::class, 'updatePassword'])->name('profile.password.update');
    
 });
 

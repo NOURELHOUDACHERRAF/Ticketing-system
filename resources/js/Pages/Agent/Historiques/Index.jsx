@@ -1,5 +1,5 @@
 import { usePage, Link } from '@inertiajs/react';
-import AgentLayout from '@/Layouts/AgentLayout';
+import AgentLayout from '@/Headers/AgentLayout';
 
 export default function HistoriquesIndex() {
   const { historiques } = usePage().props;

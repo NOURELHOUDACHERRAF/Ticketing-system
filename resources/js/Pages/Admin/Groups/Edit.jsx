@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Headers/AuthenticatedLayout';
 
 export default function Edit({ group, agents }) {
     const { data, setData, put, processing, errors } = useForm({

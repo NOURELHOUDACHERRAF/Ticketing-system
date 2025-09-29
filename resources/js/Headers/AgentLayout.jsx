@@ -1,35 +1,33 @@
+import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import SidebarAgent from '@/SideBars/SideBarAgent';
+import AgentHeader from '@/Headers/AgentHeader';
 
 export default function AgentLayout({ user, children }) {
-    // fix: get user from auth.user instead of user
     const page = usePage();
     const currentUser = user ?? page.props.auth?.user;
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     if (!currentUser) return <div>Loading...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
-            <header className="bg-white shadow flex justify-between items-center p-4">
-                <div className="text-xl font-bold text-blue-600">
-                    Ticketing System
-                </div>
+        <div className="flex h-screen w-screen overflow-hidden font-sans bg-white">
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-                <div>
-                    <Link
-                        href={route('agent.logout')}
-                        method="post"
-                        as="button"
-                        className="text-red-600 hover:underline"
-                    >
-                        Logout
-                    </Link>
-                </div>
-            </header>
+            <SidebarAgent sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            {/* Main content */}
-            <main className="p-6">{children}</main>
+            <div className="flex-1 flex flex-col bg-gray-50">
+                <AgentHeader setSidebarOpen={setSidebarOpen} />
+                <div className="flex-1 p-6 overflow-auto">
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }

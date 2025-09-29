@@ -17,9 +17,15 @@ class MessageController extends Controller
     {
         $request->validate([
             'message' => 'required|string',
+            'piece_jointe' => 'nullable|file|max:10240',
         ]);
 
         $ticket = Ticket::findOrFail($ticketId);
+
+        $path = null;
+        if ($request->hasFile('piece_jointe')) {
+            $path = $request->file('piece_jointe')->store('messages', 'public');
+        }
 
         // Création du message
         $message = MessageTicket::create([
@@ -28,6 +34,7 @@ class MessageController extends Controller
             'type_expediteur' => 'UTILISATEUR',
             'contenu' => $request->message,
             'date_envoi' => now(),
+            'piece_jointe' => $path,
         ]);
 
         // Send notification to the agent when user sends a message

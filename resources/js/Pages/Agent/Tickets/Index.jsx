@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, router } from '@inertiajs/react';
-import AgentLayout from '@/Layouts/AgentLayout';
+import AgentLayout from '@/Headers/AgentLayout';
 
 export default function Index({ unassignedTickets, assignedTickets, supervisedTickets, agent, groupAgents }) {
     return (

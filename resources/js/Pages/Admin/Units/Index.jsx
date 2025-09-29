@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Headers/AuthenticatedLayout';
 
 export default function Index({ units }) {
     const { flash } = usePage().props;
