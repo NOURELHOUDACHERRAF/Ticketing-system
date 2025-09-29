@@ -39,10 +39,26 @@ Route::get('/dashboard', function () {
 
 // ----------- Admin routes -----------
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+<<<<<<< HEAD
     Route::get('/dashboard', function () {
         $admin = auth('admin')->user();
         return Inertia::render('Admin/Dashboard', [
             'auth' => ['user' => $admin],
+=======
+   Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+
+    
+    Route::get('/dashboard', function () {
+        $admin = auth('admin')->user();
+        return Inertia::render('Admin/Dashboard', [
+            'auth' => ['user' => $admin], 
+>>>>>>> 7a6cee6 (all changes done)
         ]);
     })->name('home');
 
@@ -53,8 +69,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::resource('groups', GroupController::class)->except(['show']);
     Route::resource('agents', AgentController::class)->except(['show']);
     Route::resource('users', AdminUserController::class)->except(['show']);
+<<<<<<< HEAD
     Route::resource('categories', CategorieController::class)->except(['show']);
 
+=======
+Route::resource('categories', CategorieController::class)->except(['show']);
+>>>>>>> 7a6cee6 (all changes done)
     Route::post('agents/{agent}/assign-group', [AgentController::class, 'assignGroup'])->name('agents.assignGroup');
     Route::post('groups/{group}/set-supervisor', [GroupController::class, 'setSupervisor'])->name('groups.setSupervisor');
     Route::post('users/{user}/assign-unit', [AdminUserController::class, 'assignUnit'])->name('users.assignUnit');

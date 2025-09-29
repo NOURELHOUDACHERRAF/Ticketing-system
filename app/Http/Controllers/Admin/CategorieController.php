@@ -10,7 +10,11 @@ use App\Models\Groupe;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+<<<<<<< HEAD
 
+=======
+use Illuminate\Http\Request;
+>>>>>>> 7a6cee6 (all changes done)
 class CategorieController extends Controller
 {
     public function index(): Response

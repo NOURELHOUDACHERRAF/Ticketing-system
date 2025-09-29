@@ -12,6 +12,19 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+<<<<<<< HEAD
+=======
+        // If the logged-in user is an admin → show EditAdmin
+        if (auth('admin')->check()) {
+            return Inertia::render('Profile/EditAdmin', [
+                'auth' => ['user' => $user],
+                'mustVerifyEmail' => $user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail,
+                'status' => session('status'),
+            ]);
+        }
+
+        // Default → show utilisateur profile
+>>>>>>> 7a6cee6 (all changes done)
         return Inertia::render('Profile/Show', [
             'auth' => [
                 'user' => [
