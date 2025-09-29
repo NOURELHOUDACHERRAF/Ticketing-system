@@ -47,8 +47,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         ]);
     })->name('home');
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    // Profile (admin)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::resource('units', UnitController::class)->except(['show']);
     Route::resource('groups', GroupController::class)->except(['show']);
@@ -60,7 +64,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::post('groups/{group}/set-supervisor', [GroupController::class, 'setSupervisor'])->name('groups.setSupervisor');
     Route::post('users/{user}/assign-unit', [AdminUserController::class, 'assignUnit'])->name('users.assignUnit');
 });
-
 
 
 // ----------- Agent routes -----------

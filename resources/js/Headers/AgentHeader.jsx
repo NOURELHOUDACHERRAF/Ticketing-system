@@ -29,17 +29,7 @@ const AgentHeader = ({ setSidebarOpen, searchQuery, setSearchQuery }) => {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="relative hidden sm:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Rechercher"
-            value={searchQuery || ""}
-            onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
-            className="pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 min-w-[200px]"
-          />
-        </div>
-
+      
         <div className="hidden sm:flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg text-sm text-gray-700">
           <Calendar className="w-4 h-4 text-gray-600" />
           <span>
